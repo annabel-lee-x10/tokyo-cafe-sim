@@ -1,0 +1,5 @@
+[gd_scene load_steps=1 format=3 uid="uid://evn8pcrs4m631"]
+
+; Phase 2 placeholder — interactive station bar with tap targets
+
+[node name="StationBar" type="Control"]

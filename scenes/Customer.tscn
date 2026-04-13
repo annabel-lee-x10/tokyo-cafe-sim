@@ -1,0 +1,5 @@
+[gd_scene load_steps=1 format=3 uid="uid://cyh3tsbf2n196"]
+
+; Phase 2 placeholder — customer sprite, order bubble, seat assignment
+
+[node name="Customer" type="Node2D"]
