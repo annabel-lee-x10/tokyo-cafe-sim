@@ -11,6 +11,7 @@ var state: State = State.IDLE
 var drinks: Array = []
 var prep_duration: float = 8.0
 var _prep_elapsed: float = 0.0
+var _active_prep_duration: float = 8.0   # actual duration for current prep (with staff multiplier)
 var _prepping_drink: String = ""
 var _pulse_tween: Tween = null
 
@@ -30,8 +31,8 @@ func _process(delta: float) -> void:
 	if state != State.PREPPING:
 		return
 	_prep_elapsed += delta
-	progress_bar.value = minf(_prep_elapsed / prep_duration, 1.0)
-	if _prep_elapsed >= prep_duration:
+	progress_bar.value = minf(_prep_elapsed / _active_prep_duration, 1.0)
+	if _prep_elapsed >= _active_prep_duration:
 		_complete_prep()
 
 # ---------------------------------------------------------------------------
@@ -58,6 +59,7 @@ func start_prep(drink_name: String) -> void:
 	state = State.PREPPING
 	_prepping_drink = drink_name
 	_prep_elapsed = 0.0
+	_active_prep_duration = prep_duration * StaffManager.get_prep_speed_multiplier()
 	prep_button.disabled = true
 	progress_bar.visible = true
 	progress_bar.value = 0.0

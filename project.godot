@@ -15,6 +15,8 @@ run/main_scene="res://scenes/Main.tscn"
 
 GameManager="*res://scripts/GameManager.gd"
 RegularManager="*res://scripts/RegularManager.gd"
+StaffManager="*res://scripts/StaffManager.gd"
+SocialManager="*res://scripts/SocialManager.gd"
 
 [display]
 

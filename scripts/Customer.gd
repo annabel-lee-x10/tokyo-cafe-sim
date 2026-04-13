@@ -72,7 +72,7 @@ func receive_drink() -> void:
 	patience_bar.visible = false
 	if regular_id != "":
 		RegularManager.on_regular_served(regular_id, order)
-	GameManager.add_revenue(revenue_value)
+	GameManager.add_revenue(revenue_value * StaffManager.get_order_value_multiplier())
 	customer_left.emit(self, true)
 	leave_cafe()
 

@@ -53,6 +53,7 @@ func _ready() -> void:
 	_customer_scene  = load("res://scenes/Customer.tscn")
 	_cafe_view       = get_parent().get_node("CafeView")
 	RegularManager.drink_unlocked.connect(_on_drink_unlocked)
+	SocialManager.social_drink_unlocked.connect(_on_drink_unlocked)
 
 func _process(delta: float) -> void:
 	spawn_timer += delta
@@ -153,4 +154,6 @@ func _on_customer_left(customer: Node, was_served: bool) -> void:
 	# Un-served regulars: clear in_cafe flag (served ones are cleared in on_regular_served)
 	if not was_served and "regular_id" in customer and customer.regular_id != "":
 		RegularManager.mark_in_cafe(customer.regular_id, false)
+	if was_served:
+		SocialManager.on_customer_served(customer.order)
 	customer_departed.emit(customer, was_served)

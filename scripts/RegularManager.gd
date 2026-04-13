@@ -96,7 +96,8 @@ func on_regular_served(regular_id: String, drink_ordered: String) -> void:
 	var data: Dictionary = REGULARS.get(regular_id, {})
 
 	var old_loyalty: int = st["loyalty"]
-	st["loyalty"] += 2 if drink_ordered == data.get("favourite", "") else 1
+	var base_gain: int = 2 if drink_ordered == data.get("favourite", "") else 1
+	st["loyalty"] += int(round(base_gain * StaffManager.get_loyalty_multiplier()))
 	st["visits"]  += 1
 	st["in_cafe"]  = false
 
@@ -125,6 +126,13 @@ func _is_eligible(id: String) -> bool:
 	if id == "rin" and viral_post_count < 3:
 		return false
 	return true
+
+func get_total_visits() -> int:
+	## Returns total visits across all regulars — used by StaffManager unlock check.
+	var total := 0
+	for id in _state.keys():
+		total += _state[id].get("visits", 0)
+	return total
 
 func _get_loyalty_level(loyalty: int) -> int:
 	if loyalty >= LOYALTY_THRESHOLDS[2]: return 3

@@ -56,8 +56,9 @@ func _ready() -> void:
 	var cm: Node = get_tree().current_scene.get_node("CustomerManager")
 	cm.customer_departed.connect(_on_customer_departed)
 
-	# Extend live station drink lists when a regular unlocks a new drink
+	# Extend live station drink lists when a regular or viral post unlocks a new drink
 	RegularManager.drink_unlocked.connect(_on_drink_unlocked)
+	SocialManager.social_drink_unlocked.connect(_on_drink_unlocked)
 
 # ---------------------------------------------------------------------------
 # Order selection

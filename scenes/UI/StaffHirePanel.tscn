@@ -1,0 +1,77 @@
+[gd_scene load_steps=2 format=3 uid="uid://staffhire01"]
+
+[ext_resource type="Script" path="res://scripts/UI/StaffHirePanelUI.gd" id="1_script"]
+
+; Full-screen dimmed overlay with a centred card.
+; visible=false by default — shown by StaffHirePanelUI._on_queue_exhausted()
+
+[node name="StaffHirePanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+visible = false
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.0, 0.0, 0.0, 0.70)
+
+[node name="Card" type="VBoxContainer" parent="Background"]
+layout_mode = 1
+anchor_left = 0.10
+anchor_top = 0.28
+anchor_right = 0.90
+anchor_bottom = 0.76
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Portrait" type="ColorRect" parent="Background/Card"]
+layout_mode = 2
+custom_minimum_size = Vector2(0.0, 200.0)
+size_flags_horizontal = 3
+
+[node name="NameLabel" type="Label" parent="Background/Card"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 34
+text = "Staff Name"
+
+[node name="RoleLabel" type="Label" parent="Background/Card"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+text = "Role"
+
+[node name="EffectLabel" type="Label" parent="Background/Card"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+text = "Effect"
+
+[node name="Spacer" type="Control" parent="Background/Card"]
+layout_mode = 2
+custom_minimum_size = Vector2(0.0, 16.0)
+size_flags_vertical = 0
+
+[node name="HireButton" type="Button" parent="Background/Card"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 70.0)
+theme_override_font_sizes/font_size = 24
+text = "Hire"
+
+[node name="LaterButton" type="Button" parent="Background/Card"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 60.0)
+theme_override_font_sizes/font_size = 20
+text = "Not Now"

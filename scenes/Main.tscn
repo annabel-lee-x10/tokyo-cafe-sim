@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c8jxq2mhfdt5u"]
+[gd_scene load_steps=11 format=3 uid="uid://c8jxq2mhfdt5u"]
 
 [ext_resource type="PackedScene" path="res://scenes/UI/RevenueDisplay.tscn" id="1_revdisp"]
 [ext_resource type="PackedScene" path="res://scenes/UI/OrderQueue.tscn"    id="2_oq"]
@@ -9,10 +9,11 @@
 [ext_resource type="PackedScene" path="res://scenes/UI/DialoguePanel.tscn" id="7_dialogue"]
 [ext_resource type="PackedScene" path="res://scenes/UI/ToastLayer.tscn"    id="8_toast"]
 [ext_resource type="Script"      path="res://scripts/RegularSceneQueue.gd" id="9_rsq"]
+[ext_resource type="PackedScene" path="res://scenes/UI/StaffHirePanel.tscn" id="10_shp"]
 
 ; ─────────────────────────────────────────────────────────────────────────────
 ; UIPanel Layout order (top → bottom) — designed for portrait thumb reach:
-;   DayTimer        40px   — day / time status
+;   DayTimer        40px   — day / time / follower status
 ;   RevenueDisplay  expands
 ;   OrderQueue      80px
 ;   StationBar      280px  — bottom quarter of screen
@@ -21,6 +22,9 @@
 ;   DialoguePanel   — full-screen loyalty scene overlay (visible=false by default)
 ;   ToastLayer      — CanvasLayer layer=10 for notification toasts
 ;   RegularSceneQueue — queues dialogue scenes, plays one per day-end
+;
+; Phase 5 additions at root level:
+;   StaffHirePanel  — shown after queue_exhausted if staff are unlockable
 ; ─────────────────────────────────────────────────────────────────────────────
 
 [node name="Main" type="Control"]
@@ -116,3 +120,8 @@ script = ExtResource("5_sm")
 ; Queues loyalty scenes from RegularManager, plays one per day-end
 [node name="RegularSceneQueue" type="Node" parent="."]
 script = ExtResource("9_rsq")
+
+; ── Phase 5: staff hire panel ─────────────────────────────────────────────────
+
+; Shown after day-end dialogue (queue_exhausted) when staff are unlockable
+[node name="StaffHirePanel" parent="." instance=ExtResource("10_shp")]
