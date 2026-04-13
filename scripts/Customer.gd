@@ -70,6 +70,7 @@ func receive_drink() -> void:
 	patience_node.stop()
 	order_bubble.visible = false
 	patience_bar.visible = false
+	_show_emotion(":)", Color(0.2, 0.9, 0.3, 1.0))
 	if regular_id != "":
 		RegularManager.on_regular_served(regular_id, order)
 	var amount := revenue_value \
@@ -103,5 +104,19 @@ func _enter_waiting() -> void:
 
 func _on_patience_timeout() -> void:
 	if state == State.WAITING:
+		_show_emotion("X_X", Color(0.9, 0.2, 0.2, 1.0))
 		customer_left.emit(self, false)
 		leave_cafe()
+
+func _show_emotion(text: String, color: Color) -> void:
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.add_theme_font_size_override("font_size", 20)
+	lbl.add_theme_color_override("font_color", color)
+	lbl.position = Vector2(-16.0, -80.0)
+	add_child(lbl)
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(lbl, "position:y", lbl.position.y - 40.0, 0.8)
+	tween.tween_property(lbl, "modulate:a", 0.0, 0.8)
+	tween.chain().tween_callback(lbl.queue_free)

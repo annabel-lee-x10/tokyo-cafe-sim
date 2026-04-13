@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://c8jxq2mhfdt5u"]
+[gd_scene load_steps=17 format=3 uid="uid://c8jxq2mhfdt5u"]
 
 [ext_resource type="PackedScene" path="res://scenes/UI/RevenueDisplay.tscn"  id="1_revdisp"]
 [ext_resource type="PackedScene" path="res://scenes/UI/OrderQueue.tscn"      id="2_oq"]
@@ -12,6 +12,10 @@
 [ext_resource type="PackedScene" path="res://scenes/UI/StaffHirePanel.tscn"  id="10_shp"]
 [ext_resource type="PackedScene" path="res://scenes/UI/UpgradePanel.tscn"    id="11_up"]
 [ext_resource type="PackedScene" path="res://scenes/UI/SeasonBanner.tscn"    id="12_sb"]
+[ext_resource type="PackedScene" path="res://scenes/UI/EndingScreen.tscn"    id="13_es"]
+[ext_resource type="PackedScene" path="res://scenes/UI/PauseMenu.tscn"       id="14_pm"]
+[ext_resource type="PackedScene" path="res://scenes/UI/DayTransition.tscn"   id="15_dt"]
+[ext_resource type="Script"      path="res://scripts/UI/SeasonParticlesUI.gd" id="16_sp"]
 
 ; ─────────────────────────────────────────────────────────────────────────────
 ; UIPanel Layout order (top → bottom) — designed for portrait thumb reach:
@@ -129,3 +133,14 @@ script = ExtResource("9_rsq")
 [node name="UpgradePanel" parent="." instance=ExtResource("11_up")]
 
 [node name="SeasonBanner" parent="." instance=ExtResource("12_sb")]
+
+; ── Phase 7: particles, transitions, audio UI, ending ─────────────────────────
+
+[node name="SeasonParticles" type="Node" parent="CafeView"]
+script = ExtResource("16_sp")
+
+[node name="DayTransition" parent="." instance=ExtResource("15_dt")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("14_pm")]
+
+[node name="EndingScreen" parent="." instance=ExtResource("13_es")]

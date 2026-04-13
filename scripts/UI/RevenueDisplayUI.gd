@@ -3,16 +3,26 @@ extends VBoxContainer
 @onready var revenue_label: Label = $RevenueLabel
 @onready var progress_bar: ProgressBar = $ProgressBar
 
+var _display_revenue: float = 0.0
+var _target_revenue: float = 0.0
+
 func _ready() -> void:
 	GameManager.revenue_changed.connect(_on_revenue_changed)
-	_update_display(GameManager.total_revenue, GameManager.REVENUE_TARGET)
+	_display_revenue = GameManager.total_revenue
+	_target_revenue  = GameManager.total_revenue
+	_update_display(_display_revenue)
 
-func _on_revenue_changed(new_revenue: float, target: float) -> void:
-	_update_display(new_revenue, target)
+func _process(delta: float) -> void:
+	if abs(_display_revenue - _target_revenue) > 0.5:
+		_display_revenue = lerpf(_display_revenue, _target_revenue, 15.0 * delta)
+		_update_display(_display_revenue)
 
-func _update_display(revenue: float, target: float) -> void:
-	revenue_label.text = "\u00a5%s / \u00a5%s" % [_format_yen(revenue), _format_yen(target)]
-	progress_bar.value = GameManager.get_revenue_progress() * 100.0
+func _on_revenue_changed(new_revenue: float, _target: float) -> void:
+	_target_revenue = new_revenue
+
+func _update_display(revenue: float) -> void:
+	revenue_label.text = "\u00a5%s / \u00a5%s" % [_format_yen(revenue), _format_yen(GameManager.REVENUE_TARGET)]
+	progress_bar.value = clampf(revenue / GameManager.REVENUE_TARGET, 0.0, 1.0) * 100.0
 
 func _format_yen(amount: float) -> String:
 	var n := int(amount)

@@ -4,8 +4,10 @@ extends HBoxContainer
 @onready var day_label:      Label  = $DayLabel
 @onready var follower_label: Label  = $FollowerLabel
 @onready var time_label:     Label  = $TimeLabel
+@onready var pause_button:   Button = $PauseButton
 
 var _upgrade_panel: Node = null
+var _pause_menu: Node = null
 
 const COLOR_NORMAL  := Color(0.900, 0.900, 0.900)
 const COLOR_WARNING := Color(0.910, 0.322, 0.039)   # #E8520A — matches order palette
@@ -14,11 +16,17 @@ func _ready() -> void:
 	follower_label.text = "0 followers"
 	SocialManager.followers_changed.connect(_on_followers_changed)
 	_upgrade_panel = get_tree().current_scene.get_node_or_null("UpgradePanel")
+	_pause_menu    = get_tree().current_scene.get_node_or_null("PauseMenu")
 	upgrade_button.pressed.connect(_on_upgrade_button_pressed)
+	pause_button.pressed.connect(_on_pause_button_pressed)
 
 func _on_upgrade_button_pressed() -> void:
 	if _upgrade_panel:
 		_upgrade_panel.open()
+
+func _on_pause_button_pressed() -> void:
+	if _pause_menu:
+		_pause_menu.open()
 
 func _process(_delta: float) -> void:
 	var remaining := maxf(GameManager.DAY_DURATION - GameManager.day_timer, 0.0)

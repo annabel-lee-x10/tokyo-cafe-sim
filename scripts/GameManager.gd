@@ -27,6 +27,7 @@ var _day_active: bool = false
 # Signals
 # ---------------------------------------------------------------------------
 signal revenue_changed(new_revenue: float, target: float)
+signal day_started(day: int)
 signal day_ended(day: int, revenue: float)
 signal game_over(won: bool)
 
@@ -50,6 +51,7 @@ func start_day() -> void:
 	day_timer = 0.0
 	customers_served = 0
 	_day_active = true
+	day_started.emit(current_day)
 
 func end_day() -> void:
 	_day_active = false

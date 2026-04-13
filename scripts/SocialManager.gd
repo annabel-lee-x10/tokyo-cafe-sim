@@ -32,8 +32,8 @@ signal social_drink_unlocked(regular_id: String, drink_name: String)
 # State
 # ---------------------------------------------------------------------------
 var followers: int = 0
-var _viral_post_count: int = 0
-var _social_unlocked: Array = []   # drink names already unlocked by viral
+var viral_post_count: int = 0
+var social_unlocked: Array = []   # drink names already unlocked by viral
 
 # ---------------------------------------------------------------------------
 # Public API
@@ -67,9 +67,9 @@ func _add_followers(post_type: String, gain: int) -> void:
 	followers_changed.emit(followers)
 
 func _handle_viral_post() -> void:
-	_viral_post_count += 1
+	viral_post_count += 1
 	followers += 500
-	RegularManager.viral_post_count = _viral_post_count
+	RegularManager.viral_post_count = viral_post_count
 	followers_changed.emit(followers)
 
 	var effect := _try_unlock_drink()
@@ -82,11 +82,11 @@ func _try_unlock_drink() -> String:
 	var available: Array = []
 	for drink in SOCIAL_UNLOCKABLE.keys():
 		var rid: String = SOCIAL_UNLOCKABLE[drink]
-		if not _social_unlocked.has(drink) and RegularManager.get_loyalty_level(rid) < 3:
+		if not social_unlocked.has(drink) and RegularManager.get_loyalty_level(rid) < 3:
 			available.append({"id": rid, "drink": drink})
 	if available.is_empty():
 		return "Viral post! +500 followers"
 	var choice: Dictionary = available[randi() % available.size()]
-	_social_unlocked.append(choice["drink"])
+	social_unlocked.append(choice["drink"])
 	social_drink_unlocked.emit(choice["id"], choice["drink"])
 	return "Viral post! %s now available!" % choice["drink"]

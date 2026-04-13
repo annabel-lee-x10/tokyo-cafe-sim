@@ -67,6 +67,7 @@ func _ready() -> void:
 	SocialManager.social_drink_unlocked.connect(_on_drink_unlocked)
 	UpgradeManager.upgrade_purchased.connect(_on_upgrade_purchased)
 	SeasonManager.seasonal_drink_unlocked.connect(_on_seasonal_drink_unlocked)
+	_apply_loaded_state()
 
 func _process(delta: float) -> void:
 	spawn_timer += delta
@@ -159,6 +160,23 @@ func _on_seasonal_drink_unlocked(drink_name: String, _station_id: String) -> voi
 	var price: float = SeasonManager.get_current_season().get("seasonal_drink_price", 7.00)
 	add_drink(drink_name, price)
 
+## Re-derives the live drink/table state from persisted autoload data after a save load.
+## Called once in _ready() — a no-op on a fresh game because all flags are at defaults.
+func _apply_loaded_state() -> void:
+	for upgrade_id in GameManager.purchased_upgrades:
+		_on_upgrade_purchased(upgrade_id)
+	for regular_id in RegularManager.REGULARS.keys():
+		if RegularManager.get_loyalty_level(regular_id) >= 3:
+			var data: Dictionary = RegularManager.get_regular(regular_id)
+			var unlock: String = data.get("unlock_drink", "")
+			if unlock != "":
+				add_drink(unlock, data.get("unlock_drink_price", 5.50))
+	for drink_name in SocialManager.social_unlocked:
+		var regular_id: String = SocialManager.SOCIAL_UNLOCKABLE.get(drink_name, "")
+		if regular_id != "" and not DRINKS.has(drink_name):
+			var rdata: Dictionary = RegularManager.get_regular(regular_id)
+			add_drink(drink_name, rdata.get("unlock_drink_price", 5.50))
+
 func _on_upgrade_purchased(upgrade_id: String) -> void:
 	match upgrade_id:
 		"auto_frother":
@@ -194,6 +212,7 @@ func _connect_and_track(customer: CharacterBody2D) -> void:
 	active_customers.append(customer)
 
 func _on_customer_order_ready(customer: Node) -> void:
+	AudioManager.play_sfx("order_in")
 	order_ready.emit(customer)
 
 func _on_customer_left(customer: Node, was_served: bool) -> void:
@@ -206,5 +225,7 @@ func _on_customer_left(customer: Node, was_served: bool) -> void:
 	if not was_served and "regular_id" in customer and customer.regular_id != "":
 		RegularManager.mark_in_cafe(customer.regular_id, false)
 	if was_served:
+		AudioManager.play_sfx("serve")
+		AudioManager.play_sfx("coin")
 		SocialManager.on_customer_served(customer.order)
 	customer_departed.emit(customer, was_served)

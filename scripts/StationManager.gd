@@ -61,6 +61,7 @@ func _ready() -> void:
 	SocialManager.social_drink_unlocked.connect(_on_drink_unlocked)
 	UpgradeManager.upgrade_purchased.connect(_on_upgrade_purchased)
 	SeasonManager.seasonal_drink_unlocked.connect(add_drink_to_station)
+	_apply_loaded_state()
 
 # ---------------------------------------------------------------------------
 # Order selection
@@ -135,6 +136,23 @@ func _on_drink_unlocked(_regular_id: String, drink_name: String) -> void:
 	if station_id.is_empty():
 		return   # already in an existing station list; no action needed
 	add_drink_to_station(drink_name, station_id)
+
+## Re-derives station drink lists from persisted autoload data after a save load.
+func _apply_loaded_state() -> void:
+	for upgrade_id in GameManager.purchased_upgrades:
+		_on_upgrade_purchased(upgrade_id)
+	for regular_id in RegularManager.REGULARS.keys():
+		if RegularManager.get_loyalty_level(regular_id) >= 3:
+			var data: Dictionary = RegularManager.get_regular(regular_id)
+			var unlock: String = data.get("unlock_drink", "")
+			if unlock != "":
+				var station_id: String = DRINK_STATION_MAP.get(unlock, "")
+				if station_id != "":
+					add_drink_to_station(unlock, station_id)
+	for drink_name in SocialManager.social_unlocked:
+		var station_id: String = DRINK_STATION_MAP.get(drink_name, "")
+		if station_id != "":
+			add_drink_to_station(drink_name, station_id)
 
 func _on_upgrade_purchased(upgrade_id: String) -> void:
 	match upgrade_id:

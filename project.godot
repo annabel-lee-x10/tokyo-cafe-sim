@@ -9,7 +9,7 @@ config_version=5
 
 config/name="Hanami Cafe"
 config/features=PackedStringArray("4.3", "Mobile")
-run/main_scene="res://scenes/Main.tscn"
+run/main_scene="res://scenes/TitleScreen.tscn"
 
 [autoload]
 
@@ -19,6 +19,9 @@ StaffManager="*res://scripts/StaffManager.gd"
 SocialManager="*res://scripts/SocialManager.gd"
 UpgradeManager="*res://scripts/UpgradeManager.gd"
 SeasonManager="*res://scripts/SeasonManager.gd"
+EndingManager="*res://scripts/EndingManager.gd"
+AudioManager="*res://scripts/AudioManager.gd"
+SaveManager="*res://scripts/SaveManager.gd"
 
 [display]
 

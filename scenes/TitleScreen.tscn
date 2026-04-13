@@ -1,0 +1,231 @@
+[gd_scene load_steps=2 format=3 uid="uid://titlescreen01"]
+
+[ext_resource type="Script" path="res://scripts/TitleScreenUI.gd" id="1_script"]
+
+; Main menu / title screen.  Set as project's main scene.
+
+[node name="TitleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+; Background — muted blue-grey suggesting a cafe exterior at dawn
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.22, 0.28, 0.38, 1.0)
+
+; Illustration placeholder
+[node name="Illustration" type="ColorRect" parent="."]
+layout_mode = 1
+anchor_left = 0.0
+anchor_right = 1.0
+anchor_top = 0.0
+anchor_bottom = 0.5
+color = Color(0.28, 0.34, 0.44, 1.0)
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.10
+anchor_right = 0.90
+anchor_top  = 0.30
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="Label" parent="Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 64
+text = "Hanami Cafe"
+
+[node name="Subtitle" type="Label" parent="Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.75, 0.75, 0.80)
+text = "A Tokyo Cafe Story"
+
+[node name="Spacer" type="Control" parent="Content"]
+layout_mode = 2
+custom_minimum_size = Vector2(0.0, 60.0)
+size_flags_vertical = 0
+
+[node name="Buttons" type="VBoxContainer" parent="Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 18
+
+[node name="NewGameBtn" type="Button" parent="Content/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 80.0)
+theme_override_font_sizes/font_size = 28
+text = "New Game"
+
+[node name="ContinueBtn" type="Button" parent="Content/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 80.0)
+theme_override_font_sizes/font_size = 28
+text = "Continue"
+
+[node name="SettingsBtn" type="Button" parent="Content/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 70.0)
+theme_override_font_sizes/font_size = 24
+text = "Settings"
+
+[node name="CreditsBtn" type="Button" parent="Content/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 60.0)
+theme_override_font_sizes/font_size = 22
+text = "Credits"
+
+; ── Settings panel ────────────────────────────────────────────────────────────
+[node name="SettingsPanel" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.05
+anchor_top  = 0.18
+anchor_right = 0.95
+anchor_bottom = 0.86
+grow_horizontal = 2
+grow_vertical = 2
+visible = false
+
+[node name="Bg" type="ColorRect" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.10, 0.10, 0.14, 0.96)
+
+[node name="VBox" type="VBoxContainer" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 22
+
+[node name="Title" type="Label" parent="SettingsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 32
+text = "Settings"
+
+[node name="MasterLabel" type="Label" parent="SettingsPanel/VBox"]
+layout_mode = 2
+text = "Master Volume"
+theme_override_font_sizes/font_size = 22
+
+[node name="MasterSlider" type="HSlider" parent="SettingsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 44.0)
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="BGMLabel" type="Label" parent="SettingsPanel/VBox"]
+layout_mode = 2
+text = "BGM Volume"
+theme_override_font_sizes/font_size = 22
+
+[node name="BGMSlider" type="HSlider" parent="SettingsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 44.0)
+max_value = 1.0
+step = 0.01
+value = 0.8
+
+[node name="SFXLabel" type="Label" parent="SettingsPanel/VBox"]
+layout_mode = 2
+text = "SFX Volume"
+theme_override_font_sizes/font_size = 22
+
+[node name="SFXSlider" type="HSlider" parent="SettingsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 44.0)
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="CloseBtn" type="Button" parent="SettingsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 64.0)
+theme_override_font_sizes/font_size = 24
+text = "Back"
+
+; ── Credits panel ─────────────────────────────────────────────────────────────
+[node name="CreditsPanel" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.05
+anchor_top  = 0.10
+anchor_right = 0.95
+anchor_bottom = 0.92
+grow_horizontal = 2
+grow_vertical = 2
+visible = false
+
+[node name="Bg" type="ColorRect" parent="CreditsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.08, 0.08, 0.10, 0.97)
+
+[node name="VBox" type="VBoxContainer" parent="CreditsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CreditsLabel" type="Label" parent="CreditsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 22
+text = "HANAMI CAFE
+
+Made with Godot 4
+
+GAME DESIGN & PROGRAMMING
+You
+
+MUSIC
+Your music here
+
+SPECIAL THANKS
+The regulars of every cafe
+
+Thank you for playing."
+
+[node name="CloseBtn" type="Button" parent="CreditsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_minimum_size = Vector2(0.0, 70.0)
+theme_override_font_sizes/font_size = 24
+text = "Back"

@@ -1,0 +1,161 @@
+[gd_scene load_steps=2 format=3 uid="uid://pausemenu01"]
+
+[ext_resource type="Script" path="res://scripts/UI/PauseMenuUI.gd" id="1_script"]
+
+; Pause overlay — Control node drawn on top via sibling order in Main.tscn.
+; visible=false by default; opened by ESC or HUD pause button.
+
+[node name="PauseMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+visible = false
+
+; Dark dimming overlay
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.0, 0.0, 0.0, 0.72)
+
+; Centred button panel
+[node name="Panel" type="PanelContainer" parent="Overlay"]
+layout_mode = 1
+anchor_left = 0.15
+anchor_top  = 0.30
+anchor_right = 0.85
+anchor_bottom = 0.72
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Overlay/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="PauseLabel" type="Label" parent="Overlay/Panel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 34
+text = "Paused"
+
+[node name="Sep" type="HSeparator" parent="Overlay/Panel/VBox"]
+layout_mode = 2
+
+[node name="ResumeBtn" type="Button" parent="Overlay/Panel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 70.0)
+theme_override_font_sizes/font_size = 24
+text = "Resume"
+
+[node name="SaveBtn" type="Button" parent="Overlay/Panel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 70.0)
+theme_override_font_sizes/font_size = 24
+text = "Save Game"
+
+[node name="SettingsBtn" type="Button" parent="Overlay/Panel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 70.0)
+theme_override_font_sizes/font_size = 24
+text = "Settings"
+
+[node name="QuitBtn" type="Button" parent="Overlay/Panel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 70.0)
+theme_override_font_sizes/font_size = 24
+text = "Quit to Title"
+
+; ── Settings sub-panel ────────────────────────────────────────────────────────
+[node name="SettingsPanel" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.05
+anchor_top  = 0.20
+anchor_right = 0.95
+anchor_bottom = 0.82
+grow_horizontal = 2
+grow_vertical = 2
+visible = false
+
+[node name="Bg" type="ColorRect" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.10, 0.10, 0.12, 0.96)
+
+[node name="VBox" type="VBoxContainer" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="SettingsTitle" type="Label" parent="SettingsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 28
+text = "Settings"
+
+[node name="MasterLabel" type="Label" parent="SettingsPanel/VBox"]
+layout_mode = 2
+text = "Master Volume"
+theme_override_font_sizes/font_size = 22
+
+[node name="MasterSlider" type="HSlider" parent="SettingsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 40.0)
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="BGMLabel" type="Label" parent="SettingsPanel/VBox"]
+layout_mode = 2
+text = "BGM Volume"
+theme_override_font_sizes/font_size = 22
+
+[node name="BGMSlider" type="HSlider" parent="SettingsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 40.0)
+max_value = 1.0
+step = 0.01
+value = 0.8
+
+[node name="SFXLabel" type="Label" parent="SettingsPanel/VBox"]
+layout_mode = 2
+text = "SFX Volume"
+theme_override_font_sizes/font_size = 22
+
+[node name="SFXSlider" type="HSlider" parent="SettingsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 40.0)
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="CloseBtn" type="Button" parent="SettingsPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 60.0)
+theme_override_font_sizes/font_size = 22
+text = "Back"
