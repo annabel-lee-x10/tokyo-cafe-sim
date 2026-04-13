@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c8jxq2mhfdt5u"]
+[gd_scene load_steps=10 format=3 uid="uid://c8jxq2mhfdt5u"]
 
 [ext_resource type="PackedScene" path="res://scenes/UI/RevenueDisplay.tscn" id="1_revdisp"]
 [ext_resource type="PackedScene" path="res://scenes/UI/OrderQueue.tscn"    id="2_oq"]
@@ -6,13 +6,21 @@
 [ext_resource type="PackedScene" path="res://scenes/UI/Station.tscn"       id="4_station"]
 [ext_resource type="Script"      path="res://scripts/StationManager.gd"    id="5_sm"]
 [ext_resource type="PackedScene" path="res://scenes/UI/DayTimer.tscn"      id="6_dt"]
+[ext_resource type="PackedScene" path="res://scenes/UI/DialoguePanel.tscn" id="7_dialogue"]
+[ext_resource type="PackedScene" path="res://scenes/UI/ToastLayer.tscn"    id="8_toast"]
+[ext_resource type="Script"      path="res://scripts/RegularSceneQueue.gd" id="9_rsq"]
 
 ; ─────────────────────────────────────────────────────────────────────────────
-; Layout order in UIPanel (top → bottom) is chosen for thumb reach in portrait:
-;   DayTimer        40px   — status bar
-;   RevenueDisplay  expands — feedback
-;   OrderQueue      80px   — order buttons
-;   StationBar      280px  — prep buttons, sits in bottom quarter of screen
+; UIPanel Layout order (top → bottom) — designed for portrait thumb reach:
+;   DayTimer        40px   — day / time status
+;   RevenueDisplay  expands
+;   OrderQueue      80px
+;   StationBar      280px  — bottom quarter of screen
+;
+; Phase 4 additions at root level:
+;   DialoguePanel   — full-screen loyalty scene overlay (visible=false by default)
+;   ToastLayer      — CanvasLayer layer=10 for notification toasts
+;   RegularSceneQueue — queues dialogue scenes, plays one per day-end
 ; ─────────────────────────────────────────────────────────────────────────────
 
 [node name="Main" type="Control"]
@@ -48,29 +56,21 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-; 1. Day / time status bar
-
 [node name="DayTimer" parent="UIPanel/Layout" instance=ExtResource("6_dt")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
-
-; 2. Revenue indicator (expands to fill remaining space)
 
 [node name="RevenueDisplay" parent="UIPanel/Layout" instance=ExtResource("1_revdisp")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-; 3. Active order queue
-
 [node name="OrderQueue" parent="UIPanel/Layout" instance=ExtResource("2_oq")]
 layout_mode = 2
 custom_minimum_size = Vector2(0.0, 80.0)
 size_flags_horizontal = 3
 size_flags_vertical = 0
-
-; 4. Station bar — three side-by-side prep stations, bottom-quarter of screen
 
 [node name="StationBar" type="HBoxContainer" parent="UIPanel/Layout"]
 layout_mode = 2
@@ -96,7 +96,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 station_id = "matcha"
 
-; ── Game systems (non-visual) ─────────────────────────────────────────────────
+; ── Game systems ──────────────────────────────────────────────────────────────
 
 [node name="CustomerManager" type="Node" parent="."]
 unique_name_in_owner = true
@@ -104,3 +104,15 @@ script = ExtResource("3_cm")
 
 [node name="StationManager" type="Node" parent="."]
 script = ExtResource("5_sm")
+
+; ── Phase 4: loyalty scenes + toasts ─────────────────────────────────────────
+
+; Full-screen dialogue overlay — drawn on top of UIPanel; hidden=true by default
+[node name="DialoguePanel" parent="." instance=ExtResource("7_dialogue")]
+
+; Toast notification layer — CanvasLayer layer=10, sits above everything
+[node name="ToastLayer" parent="." instance=ExtResource("8_toast")]
+
+; Queues loyalty scenes from RegularManager, plays one per day-end
+[node name="RegularSceneQueue" type="Node" parent="."]
+script = ExtResource("9_rsq")

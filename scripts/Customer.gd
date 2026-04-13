@@ -16,6 +16,7 @@ var assigned_table: Vector2 = Vector2.ZERO
 var order: String = ""
 var patience_timer: float = PATIENCE_DURATION
 var revenue_value: float = 0.0
+var regular_id: String = ""   # empty = random walk-in
 
 @onready var order_bubble: Label    = $OrderBubble
 @onready var patience_node: Timer   = $Patience
@@ -47,6 +48,12 @@ func _process(delta: float) -> void:
 # Public API
 # ---------------------------------------------------------------------------
 
+## Sets the sprite to a 48×64 colored rect — used for named regulars.
+func set_body_color(color: Color) -> void:
+	$Body.color    = color
+	$Body.position = Vector2(-24.0, -64.0)
+	$Body.size     = Vector2(48.0, 64.0)
+
 func set_order(drink_name: String, price: float) -> void:
 	order = drink_name
 	revenue_value = price
@@ -63,6 +70,8 @@ func receive_drink() -> void:
 	patience_node.stop()
 	order_bubble.visible = false
 	patience_bar.visible = false
+	if regular_id != "":
+		RegularManager.on_regular_served(regular_id, order)
 	GameManager.add_revenue(revenue_value)
 	customer_left.emit(self, true)
 	leave_cafe()

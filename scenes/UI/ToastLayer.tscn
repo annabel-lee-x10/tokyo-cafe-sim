@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://btoast001"]
+
+[ext_resource type="Script" path="res://scripts/UI/ToastLayer.gd" id="1_script"]
+
+; CanvasLayer at layer 10 — renders above all Control-based UI
+[node name="ToastLayer" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_script")
+
+; VBoxContainer near the top of the screen; toasts are added dynamically
+[node name="Container" type="VBoxContainer" parent="."]
+position = Vector2(108.0, 48.0)
+size = Vector2(864.0, 400.0)

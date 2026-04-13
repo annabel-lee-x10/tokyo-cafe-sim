@@ -1,5 +1,12 @@
 extends Node
 
+## Maps newly-unlocked drinks to the station that handles them.
+## Drinks already assigned to a station in Phase 3 don't need an entry here.
+const DRINK_STATION_MAP: Dictionary = {
+	"Hojicha Espresso":         "espresso",
+	"Single Origin Pour Over":  "drip",
+}
+
 const STATIONS: Dictionary = {
 	"espresso": {
 		"name": "Espresso Machine",
@@ -49,6 +56,9 @@ func _ready() -> void:
 	var cm: Node = get_tree().current_scene.get_node("CustomerManager")
 	cm.customer_departed.connect(_on_customer_departed)
 
+	# Extend live station drink lists when a regular unlocks a new drink
+	RegularManager.drink_unlocked.connect(_on_drink_unlocked)
+
 # ---------------------------------------------------------------------------
 # Order selection
 # ---------------------------------------------------------------------------
@@ -76,9 +86,8 @@ func _handle_idle_tap(station_id: String, station) -> void:
 		return
 
 	var drink: String = _selected_customer.order
-	var station_drinks: Array = STATIONS[station_id]["drinks"]
-
-	if station_drinks.has(drink):
+	# Check the live drinks list on the node (updated at runtime for unlocked drinks)
+	if station.drinks.has(drink):
 		# Correct station — begin prep
 		station.start_prep(drink)
 		_station_orders[station_id] = _selected_customer
@@ -107,3 +116,19 @@ func _on_customer_departed(customer: Node, _was_served: bool) -> void:
 
 func _on_prep_complete(_station_id: String) -> void:
 	pass  # Station handles its own pulse animation
+
+# ---------------------------------------------------------------------------
+# Drink unlock — add new drinks to the appropriate station's live list
+# ---------------------------------------------------------------------------
+func add_drink_to_station(drink_name: String, station_id: String) -> void:
+	var station = _stations.get(station_id)
+	if station == null:
+		return
+	if not station.drinks.has(drink_name):
+		station.drinks.append(drink_name)
+
+func _on_drink_unlocked(_regular_id: String, drink_name: String) -> void:
+	var station_id: String = DRINK_STATION_MAP.get(drink_name, "")
+	if station_id.is_empty():
+		return   # already in an existing station list; no action needed
+	add_drink_to_station(drink_name, station_id)
