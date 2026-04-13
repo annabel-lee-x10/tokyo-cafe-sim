@@ -1,0 +1,106 @@
+[gd_scene load_steps=2 format=3 uid="uid://upgradepanel01"]
+
+[ext_resource type="Script" path="res://scripts/UI/UpgradePanelUI.gd" id="1_script"]
+
+; Slide-up upgrade shop panel.
+; visible=false by default.  Sheet slides up from below on open().
+
+[node name="UpgradePanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+visible = false
+
+; Dark tap-to-close overlay
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.0, 0.0, 0.0, 0.60)
+
+; ── Sheet — slides up into view ──────────────────────────────────────────────
+; layout_mode=0 (free position) so position:y can be tweened directly.
+[node name="Sheet" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 1080.0
+offset_bottom = 1040.0
+
+[node name="VBox" type="VBoxContainer" parent="Sheet"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+; ── Header ───────────────────────────────────────────────────────────────────
+[node name="Header" type="HBoxContainer" parent="Sheet/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0.0, 56.0)
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="RevenueLabel" type="Label" parent="Sheet/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Revenue: ¥0"
+theme_override_font_sizes/font_size = 22
+
+[node name="CloseBtn" type="Button" parent="Sheet/VBox/Header"]
+layout_mode = 2
+custom_minimum_size = Vector2(80.0, 0.0)
+text = "Close"
+theme_override_font_sizes/font_size = 20
+
+[node name="HeaderSep" type="HSeparator" parent="Sheet/VBox"]
+layout_mode = 2
+
+; ── Tab bar ──────────────────────────────────────────────────────────────────
+[node name="TabBar" type="HBoxContainer" parent="Sheet/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0.0, 64.0)
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="EquipmentBtn" type="Button" parent="Sheet/VBox/TabBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 64.0)
+text = "Equipment"
+theme_override_font_sizes/font_size = 22
+toggle_mode = true
+button_pressed = true
+
+[node name="DecorBtn" type="Button" parent="Sheet/VBox/TabBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 64.0)
+text = "Decor"
+theme_override_font_sizes/font_size = 22
+toggle_mode = true
+
+[node name="MenuBtn" type="Button" parent="Sheet/VBox/TabBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 64.0)
+text = "Menu"
+theme_override_font_sizes/font_size = 22
+toggle_mode = true
+
+[node name="TabSep" type="HSeparator" parent="Sheet/VBox"]
+layout_mode = 2
+
+; ── Scroll area — populated by UpgradePanelUI._build_items() ─────────────────
+[node name="Scroll" type="ScrollContainer" parent="Sheet/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ItemList" type="VBoxContainer" parent="Sheet/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3

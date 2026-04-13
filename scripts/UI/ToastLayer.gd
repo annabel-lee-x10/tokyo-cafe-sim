@@ -13,6 +13,8 @@ func _ready() -> void:
 	SocialManager.post_generated.connect(_on_post_generated)
 	SocialManager.viral_post.connect(_on_viral_post)
 	StaffManager.staff_hired.connect(_on_staff_hired)
+	SeasonManager.special_event_started.connect(_on_special_event)
+	SeasonManager.seasonal_drink_unlocked.connect(_on_seasonal_drink_unlocked)
 
 # ---------------------------------------------------------------------------
 # Public
@@ -67,3 +69,9 @@ func _on_viral_post(effect_desc: String) -> void:
 func _on_staff_hired(staff_id: String) -> void:
 	var data: Dictionary = StaffManager.STAFF.get(staff_id, {})
 	show_toast("Hired %s — %s" % [data.get("name", staff_id.capitalize()), data.get("effect_desc", "")])
+
+func _on_special_event(event_name: String, description: String) -> void:
+	show_toast("Tomorrow: %s — %s" % [event_name, description], 5.0)
+
+func _on_seasonal_drink_unlocked(drink_name: String, _station_id: String) -> void:
+	show_toast("New seasonal drink: %s" % drink_name)

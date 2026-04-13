@@ -59,7 +59,9 @@ func start_prep(drink_name: String) -> void:
 	state = State.PREPPING
 	_prepping_drink = drink_name
 	_prep_elapsed = 0.0
-	_active_prep_duration = prep_duration * StaffManager.get_prep_speed_multiplier()
+	_active_prep_duration = prep_duration \
+		* StaffManager.get_prep_speed_multiplier() \
+		* UpgradeManager.get_station_prep_multiplier(station_id)
 	prep_button.disabled = true
 	progress_bar.visible = true
 	progress_bar.value = 0.0

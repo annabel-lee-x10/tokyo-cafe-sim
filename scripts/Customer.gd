@@ -38,7 +38,7 @@ func _process(delta: float) -> void:
 				_enter_waiting()
 		State.WAITING:
 			if not patience_node.is_stopped():
-				patience_bar.size.x = PATIENCE_BAR_WIDTH * (patience_node.time_left / PATIENCE_DURATION)
+				patience_bar.size.x = PATIENCE_BAR_WIDTH * (patience_node.time_left / patience_node.wait_time)
 		State.LEAVING:
 			position = position.lerp(EXIT_POSITION, LERP_WEIGHT * delta)
 			if position.distance_to(EXIT_POSITION) < 6.0:
@@ -72,7 +72,12 @@ func receive_drink() -> void:
 	patience_bar.visible = false
 	if regular_id != "":
 		RegularManager.on_regular_served(regular_id, order)
-	GameManager.add_revenue(revenue_value * StaffManager.get_order_value_multiplier())
+	var amount := revenue_value \
+		* StaffManager.get_order_value_multiplier() \
+		* UpgradeManager.get_order_value_multiplier() \
+		* SeasonManager.get_revenue_modifier()
+	amount += UpgradeManager.get_upsell_value()
+	GameManager.add_revenue(amount)
 	customer_left.emit(self, true)
 	leave_cafe()
 
@@ -87,8 +92,12 @@ func leave_cafe() -> void:
 
 func _enter_waiting() -> void:
 	state = State.WAITING
+	var effective_patience := PATIENCE_DURATION \
+		* UpgradeManager.get_patience_multiplier() \
+		* SeasonManager.get_patience_multiplier()
 	patience_bar.size.x = PATIENCE_BAR_WIDTH
 	patience_bar.visible = true
+	patience_node.wait_time = effective_patience
 	patience_node.start()
 	show_order_bubble()
 

@@ -26,6 +26,7 @@ func _ready() -> void:
 func _on_queue_exhausted() -> void:
 	var available: Array = StaffManager.get_unlockable_staff()
 	if available.is_empty():
+		GameManager.start_day()   # nothing to show — start next day immediately
 		return
 	_show_offer(available[0])
 
@@ -47,7 +48,9 @@ func _on_hire_pressed() -> void:
 	StaffManager.hire(_pending_id)
 	_pending_id = ""
 	visible = false
+	GameManager.start_day()
 
 func _on_later_pressed() -> void:
 	_pending_id = ""
 	visible = false
+	GameManager.start_day()

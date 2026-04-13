@@ -17,6 +17,8 @@ GameManager="*res://scripts/GameManager.gd"
 RegularManager="*res://scripts/RegularManager.gd"
 StaffManager="*res://scripts/StaffManager.gd"
 SocialManager="*res://scripts/SocialManager.gd"
+UpgradeManager="*res://scripts/UpgradeManager.gd"
+SeasonManager="*res://scripts/SeasonManager.gd"
 
 [display]
 

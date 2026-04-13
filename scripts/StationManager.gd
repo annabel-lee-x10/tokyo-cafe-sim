@@ -59,6 +59,8 @@ func _ready() -> void:
 	# Extend live station drink lists when a regular or viral post unlocks a new drink
 	RegularManager.drink_unlocked.connect(_on_drink_unlocked)
 	SocialManager.social_drink_unlocked.connect(_on_drink_unlocked)
+	UpgradeManager.upgrade_purchased.connect(_on_upgrade_purchased)
+	SeasonManager.seasonal_drink_unlocked.connect(add_drink_to_station)
 
 # ---------------------------------------------------------------------------
 # Order selection
@@ -133,3 +135,22 @@ func _on_drink_unlocked(_regular_id: String, drink_name: String) -> void:
 	if station_id.is_empty():
 		return   # already in an existing station list; no action needed
 	add_drink_to_station(drink_name, station_id)
+
+func _on_upgrade_purchased(upgrade_id: String) -> void:
+	match upgrade_id:
+		"auto_frother":
+			add_drink_to_station("Vanilla Latte",  "espresso")
+			add_drink_to_station("Oat Milk Latte", "espresso")
+		"cold_brew_tower":
+			add_drink_to_station("Nitro Cold Brew", "drip")
+			add_drink_to_station("Cold Brew Float", "drip")
+		"premium_tea_set":
+			add_drink_to_station("Genmaicha",   "matcha")
+			add_drink_to_station("Hojicha Tea", "matcha")
+			add_drink_to_station("Sencha",      "matcha")
+		"seasonal_board":
+			var sdata := SeasonManager.get_current_season()
+			var drink := sdata.get("seasonal_drink", "")
+			var station := sdata.get("seasonal_drink_station", "espresso")
+			if drink != "":
+				add_drink_to_station(drink, station)

@@ -23,6 +23,17 @@ const TABLE_POSITIONS: Array = [
 	Vector2(200.0, 200.0),
 	Vector2(400.0, 200.0),
 	Vector2(300.0, 350.0),
+	Vector2(150.0, 350.0),   # unlocked by Window Seats
+	Vector2(500.0, 350.0),   # unlocked by Garden Terrace
+]
+
+## Drinks eligible during Heat Wave (cold drinks only event).
+const COLD_DRINKS: Array = [
+	"Cold Brew",
+	"Iced Matcha Latte",
+	"Nitro Cold Brew",
+	"Cold Brew Float",
+	"Iced Yuzu",
 ]
 
 ## Chance (0–1) that an eligible regular spawns instead of a walk-in.
@@ -49,18 +60,24 @@ var _cafe_view: Node2D
 # Lifecycle
 # ---------------------------------------------------------------------------
 func _ready() -> void:
-	available_tables = TABLE_POSITIONS.duplicate()
+	available_tables = TABLE_POSITIONS.slice(0, 3).duplicate()   # start with 3 tables
 	_customer_scene  = load("res://scenes/Customer.tscn")
 	_cafe_view       = get_parent().get_node("CafeView")
 	RegularManager.drink_unlocked.connect(_on_drink_unlocked)
 	SocialManager.social_drink_unlocked.connect(_on_drink_unlocked)
+	UpgradeManager.upgrade_purchased.connect(_on_upgrade_purchased)
+	SeasonManager.seasonal_drink_unlocked.connect(_on_seasonal_drink_unlocked)
 
 func _process(delta: float) -> void:
 	spawn_timer += delta
-	var interval: float = GameManager.get_spawn_interval()
+	var interval: float = GameManager.get_spawn_interval() \
+		* SeasonManager.get_spawn_interval_multiplier()
 	if spawn_timer >= interval:
 		spawn_timer = 0.0
-		if active_customers.size() < max_customers and not available_tables.is_empty():
+		var effective_max := max_customers \
+			+ UpgradeManager.get_max_customers_bonus() \
+			+ SeasonManager.get_event_max_customers_bonus()
+		if active_customers.size() < effective_max and not available_tables.is_empty():
 			_decide_and_spawn()
 
 # ---------------------------------------------------------------------------
@@ -79,9 +96,14 @@ func spawn_customer() -> void:
 	if table_pos == Vector2(-1.0, -1.0):
 		return
 	var customer: CharacterBody2D = _customer_scene.instantiate()
-	customer.position      = Vector2(-60.0, table_pos.y)
+	customer.position       = Vector2(-60.0, table_pos.y)
 	customer.assigned_table = table_pos
+	# Heat Wave: walk-ins only order cold drinks
 	var drink_keys: Array = DRINKS.keys()
+	if SeasonManager.is_cold_drinks_only():
+		var cold: Array = drink_keys.filter(func(d): return COLD_DRINKS.has(d))
+		if not cold.is_empty():
+			drink_keys = cold
 	var drink_name: String = drink_keys[randi() % drink_keys.size()]
 	customer.set_order(drink_name, DRINKS[drink_name])
 	_connect_and_track(customer)
@@ -132,6 +154,35 @@ func add_drink(drink_name: String, price: float) -> void:
 func _on_drink_unlocked(regular_id: String, drink_name: String) -> void:
 	var data: Dictionary = RegularManager.get_regular(regular_id)
 	add_drink(drink_name, data.get("unlock_drink_price", 5.50))
+
+func _on_seasonal_drink_unlocked(drink_name: String, _station_id: String) -> void:
+	var price: float = SeasonManager.get_current_season().get("seasonal_drink_price", 7.00)
+	add_drink(drink_name, price)
+
+func _on_upgrade_purchased(upgrade_id: String) -> void:
+	match upgrade_id:
+		"auto_frother":
+			add_drink("Vanilla Latte",  6.00)
+			add_drink("Oat Milk Latte", 6.50)
+		"cold_brew_tower":
+			add_drink("Nitro Cold Brew", 6.00)
+			add_drink("Cold Brew Float", 6.00)
+		"premium_tea_set":
+			add_drink("Genmaicha",   5.50)
+			add_drink("Hojicha Tea", 5.00)
+			add_drink("Sencha",      5.00)
+		"seasonal_board":
+			# Unlock the current season's drink immediately
+			var sdata := SeasonManager.get_current_season()
+			var drink := sdata.get("seasonal_drink", "")
+			if drink != "":
+				add_drink(drink, sdata.get("seasonal_drink_price", 7.00))
+		"window_seats":
+			available_tables.append(TABLE_POSITIONS[3])
+			max_customers = 4
+		"garden_terrace":
+			available_tables.append(TABLE_POSITIONS[4])
+			max_customers = 5
 
 # ---------------------------------------------------------------------------
 # Signal plumbing

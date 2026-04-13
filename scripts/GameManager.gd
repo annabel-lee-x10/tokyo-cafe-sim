@@ -19,6 +19,7 @@ var total_revenue: float = 0.0
 var day_timer: float = 0.0
 var customers_served: int = 0
 var total_customers_served: int = 0   # cumulative, never resets — used by StaffManager
+var purchased_upgrades: Array = []    # persisted by UpgradeManager on each purchase
 
 var _day_active: bool = false
 
@@ -61,6 +62,10 @@ func add_revenue(amount: float) -> void:
 	total_revenue += amount
 	customers_served += 1
 	total_customers_served += 1
+	revenue_changed.emit(total_revenue, REVENUE_TARGET)
+
+func deduct_revenue(amount: float) -> void:
+	total_revenue = maxf(total_revenue - amount, 0.0)
 	revenue_changed.emit(total_revenue, REVENUE_TARGET)
 
 func get_revenue_progress() -> float:

@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://seasonbanner01"]
+
+[ext_resource type="Script" path="res://scripts/UI/SeasonBannerUI.gd" id="1_script"]
+
+; Full-width season-change banner.  layer=5 — above game, below toasts (layer=10).
+; Banner starts with modulate.a=0 (invisible); SeasonBannerUI tweens it.
+
+[node name="SeasonBanner" type="CanvasLayer"]
+layer = 5
+script = ExtResource("1_script")
+
+; Horizontal band centred at roughly y=860–1060 (centre of a 1920px portrait viewport)
+[node name="Banner" type="ColorRect" parent="."]
+offset_left   = 0.0
+offset_top    = 860.0
+offset_right  = 1080.0
+offset_bottom = 1060.0
+color = Color(1.0, 0.95, 0.97, 0.88)
+
+[node name="Label" type="Label" parent="Banner"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Season"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 48

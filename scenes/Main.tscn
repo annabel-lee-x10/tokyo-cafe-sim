@@ -1,30 +1,32 @@
-[gd_scene load_steps=11 format=3 uid="uid://c8jxq2mhfdt5u"]
+[gd_scene load_steps=13 format=3 uid="uid://c8jxq2mhfdt5u"]
 
-[ext_resource type="PackedScene" path="res://scenes/UI/RevenueDisplay.tscn" id="1_revdisp"]
-[ext_resource type="PackedScene" path="res://scenes/UI/OrderQueue.tscn"    id="2_oq"]
-[ext_resource type="Script"      path="res://scripts/CustomerManager.gd"   id="3_cm"]
-[ext_resource type="PackedScene" path="res://scenes/UI/Station.tscn"       id="4_station"]
-[ext_resource type="Script"      path="res://scripts/StationManager.gd"    id="5_sm"]
-[ext_resource type="PackedScene" path="res://scenes/UI/DayTimer.tscn"      id="6_dt"]
-[ext_resource type="PackedScene" path="res://scenes/UI/DialoguePanel.tscn" id="7_dialogue"]
-[ext_resource type="PackedScene" path="res://scenes/UI/ToastLayer.tscn"    id="8_toast"]
-[ext_resource type="Script"      path="res://scripts/RegularSceneQueue.gd" id="9_rsq"]
-[ext_resource type="PackedScene" path="res://scenes/UI/StaffHirePanel.tscn" id="10_shp"]
+[ext_resource type="PackedScene" path="res://scenes/UI/RevenueDisplay.tscn"  id="1_revdisp"]
+[ext_resource type="PackedScene" path="res://scenes/UI/OrderQueue.tscn"      id="2_oq"]
+[ext_resource type="Script"      path="res://scripts/CustomerManager.gd"     id="3_cm"]
+[ext_resource type="PackedScene" path="res://scenes/UI/Station.tscn"         id="4_station"]
+[ext_resource type="Script"      path="res://scripts/StationManager.gd"      id="5_sm"]
+[ext_resource type="PackedScene" path="res://scenes/UI/DayTimer.tscn"        id="6_dt"]
+[ext_resource type="PackedScene" path="res://scenes/UI/DialoguePanel.tscn"   id="7_dialogue"]
+[ext_resource type="PackedScene" path="res://scenes/UI/ToastLayer.tscn"      id="8_toast"]
+[ext_resource type="Script"      path="res://scripts/RegularSceneQueue.gd"   id="9_rsq"]
+[ext_resource type="PackedScene" path="res://scenes/UI/StaffHirePanel.tscn"  id="10_shp"]
+[ext_resource type="PackedScene" path="res://scenes/UI/UpgradePanel.tscn"    id="11_up"]
+[ext_resource type="PackedScene" path="res://scenes/UI/SeasonBanner.tscn"    id="12_sb"]
 
 ; ─────────────────────────────────────────────────────────────────────────────
 ; UIPanel Layout order (top → bottom) — designed for portrait thumb reach:
-;   DayTimer        40px   — day / time / follower status
+;   DayTimer        40px   — Shop button | day | followers | time
 ;   RevenueDisplay  expands
 ;   OrderQueue      80px
 ;   StationBar      280px  — bottom quarter of screen
 ;
-; Phase 4 additions at root level:
-;   DialoguePanel   — full-screen loyalty scene overlay (visible=false by default)
-;   ToastLayer      — CanvasLayer layer=10 for notification toasts
-;   RegularSceneQueue — queues dialogue scenes, plays one per day-end
-;
-; Phase 5 additions at root level:
-;   StaffHirePanel  — shown after queue_exhausted if staff are unlockable
+; Root-level overlays (in z-order):
+;   DialoguePanel   — loyalty scene overlay (visible=false by default)
+;   ToastLayer      — CanvasLayer layer=10
+;   RegularSceneQueue — queues dialogue, plays one per day-end
+;   StaffHirePanel  — shown after queue_exhausted
+;   UpgradePanel    — slide-up shop (opened by HUD Shop button)
+;   SeasonBanner    — CanvasLayer layer=5, season-change banner
 ; ─────────────────────────────────────────────────────────────────────────────
 
 [node name="Main" type="Control"]
@@ -111,17 +113,19 @@ script = ExtResource("5_sm")
 
 ; ── Phase 4: loyalty scenes + toasts ─────────────────────────────────────────
 
-; Full-screen dialogue overlay — drawn on top of UIPanel; hidden=true by default
 [node name="DialoguePanel" parent="." instance=ExtResource("7_dialogue")]
 
-; Toast notification layer — CanvasLayer layer=10, sits above everything
 [node name="ToastLayer" parent="." instance=ExtResource("8_toast")]
 
-; Queues loyalty scenes from RegularManager, plays one per day-end
 [node name="RegularSceneQueue" type="Node" parent="."]
 script = ExtResource("9_rsq")
 
 ; ── Phase 5: staff hire panel ─────────────────────────────────────────────────
 
-; Shown after day-end dialogue (queue_exhausted) when staff are unlockable
 [node name="StaffHirePanel" parent="." instance=ExtResource("10_shp")]
+
+; ── Phase 6: upgrade shop + season banner ─────────────────────────────────────
+
+[node name="UpgradePanel" parent="." instance=ExtResource("11_up")]
+
+[node name="SeasonBanner" parent="." instance=ExtResource("12_sb")]

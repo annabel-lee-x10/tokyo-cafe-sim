@@ -45,7 +45,8 @@ func get_follower_count() -> int:
 func on_customer_served(drink_name: String) -> void:
 	var base := BASE_CHANCE_SIGNATURE if SIGNATURE_DRINKS.has(drink_name) \
 		else BASE_CHANCE_REGULAR
-	var chance := base * StaffManager.get_follower_multiplier()
+	var chance := (base + UpgradeManager.get_post_chance_bonus()) \
+		* StaffManager.get_follower_multiplier()
 	if randf() >= chance:
 		return
 
