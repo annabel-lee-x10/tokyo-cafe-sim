@@ -31,6 +31,9 @@ signal game_over(won: bool)
 # ---------------------------------------------------------------------------
 # Lifecycle
 # ---------------------------------------------------------------------------
+func _ready() -> void:
+	start_day()
+
 func _process(delta: float) -> void:
 	if not _day_active:
 		return

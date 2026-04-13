@@ -4,9 +4,19 @@ extends Node
 # Drink menu — name: base price (¥)
 # ---------------------------------------------------------------------------
 const DRINKS: Dictionary = {
-	"Drip Coffee": 4.50,
-	"Cafe Latte":  5.50,
-	"Matcha Latte": 6.00,
+	# Espresso station
+	"Cafe Latte":        5.50,
+	"Cappuccino":        5.00,
+	"Cortado":           5.00,
+	"Flat White":        5.50,
+	# Drip station
+	"Drip Coffee":       4.50,
+	"Americano":         4.50,
+	"Cold Brew":         5.00,
+	# Matcha station
+	"Matcha Latte":      6.00,
+	"Hojicha Latte":     6.00,
+	"Iced Matcha Latte": 6.50,
 }
 
 const TABLE_POSITIONS: Array = [

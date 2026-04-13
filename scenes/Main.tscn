@@ -1,14 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://c8jxq2mhfdt5u"]
+[gd_scene load_steps=7 format=3 uid="uid://c8jxq2mhfdt5u"]
 
 [ext_resource type="PackedScene" path="res://scenes/UI/RevenueDisplay.tscn" id="1_revdisp"]
 [ext_resource type="PackedScene" path="res://scenes/UI/OrderQueue.tscn"    id="2_oq"]
 [ext_resource type="Script"      path="res://scripts/CustomerManager.gd"   id="3_cm"]
+[ext_resource type="PackedScene" path="res://scenes/UI/Station.tscn"       id="4_station"]
+[ext_resource type="Script"      path="res://scripts/StationManager.gd"    id="5_sm"]
+[ext_resource type="PackedScene" path="res://scenes/UI/DayTimer.tscn"      id="6_dt"]
 
 ; ─────────────────────────────────────────────────────────────────────────────
-; Main — full-viewport Control
-; Top half  → CafeView  (Node2D, customers live here)
-; Bottom half → UIPanel (Control, player interaction)
-; Sibling   → CustomerManager (Node, spawn loop)
+; Layout order in UIPanel (top → bottom) is chosen for thumb reach in portrait:
+;   DayTimer        40px   — status bar
+;   RevenueDisplay  expands — feedback
+;   OrderQueue      80px   — order buttons
+;   StationBar      280px  — prep buttons, sits in bottom quarter of screen
 ; ─────────────────────────────────────────────────────────────────────────────
 
 [node name="Main" type="Control"]
@@ -19,7 +23,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-; ── Top half ──────────────────────────────────────────────────────────────────
+; ── Top half: cafe scene ──────────────────────────────────────────────────────
 
 [node name="CafeView" type="Node2D" parent="."]
 
@@ -27,7 +31,7 @@ grow_vertical = 2
 color = Color(0.961, 0.925, 0.843, 1)
 size = Vector2(1080, 960)
 
-; ── Bottom half ───────────────────────────────────────────────────────────────
+; ── Bottom half: player UI ────────────────────────────────────────────────────
 
 [node name="UIPanel" type="Control" parent="."]
 layout_mode = 1
@@ -44,52 +48,59 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-; Three station placeholder buttons — warm brown, soft blue, muted yellow
+; 1. Day / time status bar
 
-[node name="StationBar" type="HBoxContainer" parent="UIPanel/Layout"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 200)
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Station1" type="ColorRect" parent="UIPanel/Layout/StationBar"]
-layout_mode = 2
-custom_minimum_size = Vector2(48, 48)
-size_flags_horizontal = 3
-size_flags_vertical = 3
-color = Color(0.831, 0.647, 0.455, 1)
-
-[node name="Station2" type="ColorRect" parent="UIPanel/Layout/StationBar"]
-layout_mode = 2
-custom_minimum_size = Vector2(48, 48)
-size_flags_horizontal = 3
-size_flags_vertical = 3
-color = Color(0.455, 0.647, 0.831, 1)
-
-[node name="Station3" type="ColorRect" parent="UIPanel/Layout/StationBar"]
-layout_mode = 2
-custom_minimum_size = Vector2(48, 48)
-size_flags_horizontal = 3
-size_flags_vertical = 3
-color = Color(0.831, 0.773, 0.455, 1)
-
-; Live order queue — replaces the Phase 1 ColorRect placeholder
-
-[node name="OrderQueue" parent="UIPanel/Layout" instance=ExtResource("2_oq")]
+[node name="DayTimer" parent="UIPanel/Layout" instance=ExtResource("6_dt")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
-; Revenue display
+; 2. Revenue indicator (expands to fill remaining space)
 
 [node name="RevenueDisplay" parent="UIPanel/Layout" instance=ExtResource("1_revdisp")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-; ── Spawn manager ─────────────────────────────────────────────────────────────
-; unique_name_in_owner lets OrderQueueUI (and future nodes) find this as %CustomerManager
+; 3. Active order queue
+
+[node name="OrderQueue" parent="UIPanel/Layout" instance=ExtResource("2_oq")]
+layout_mode = 2
+custom_minimum_size = Vector2(0.0, 80.0)
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+; 4. Station bar — three side-by-side prep stations, bottom-quarter of screen
+
+[node name="StationBar" type="HBoxContainer" parent="UIPanel/Layout"]
+layout_mode = 2
+custom_minimum_size = Vector2(0.0, 280.0)
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Espresso" parent="UIPanel/Layout/StationBar" instance=ExtResource("4_station")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+station_id = "espresso"
+
+[node name="Drip" parent="UIPanel/Layout/StationBar" instance=ExtResource("4_station")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+station_id = "drip"
+
+[node name="Matcha" parent="UIPanel/Layout/StationBar" instance=ExtResource("4_station")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+station_id = "matcha"
+
+; ── Game systems (non-visual) ─────────────────────────────────────────────────
 
 [node name="CustomerManager" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_cm")
+
+[node name="StationManager" type="Node" parent="."]
+script = ExtResource("5_sm")

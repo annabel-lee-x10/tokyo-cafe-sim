@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://bstation001"]
+
+[ext_resource type="Script" path="res://scripts/UI/Station.gd" id="1_script"]
+
+; Station — VBoxContainer with state machine (IDLE / PREPPING / READY)
+; station_id is set per-instance in Main.tscn; setup() called by StationManager._ready()
+
+[node name="Station" type="VBoxContainer"]
+script = ExtResource("1_script")
+custom_minimum_size = Vector2(48.0, 48.0)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="NameLabel" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+text = "Station"
+custom_minimum_size = Vector2(0.0, 28.0)
+
+[node name="PrepButton" type="Button" parent="."]
+layout_mode = 2
+custom_minimum_size = Vector2(48.0, 48.0)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Prep"
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0.0, 16.0)
+max_value = 1.0
+value = 0.0
+visible = false
+
+[node name="DrinkLabel" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+autowrap_mode = 2
+custom_minimum_size = Vector2(0.0, 24.0)
+text = ""
+visible = false
