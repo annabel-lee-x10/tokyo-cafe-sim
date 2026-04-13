@@ -1,5 +1,43 @@
-[gd_scene load_steps=1 format=3 uid="uid://cyh3tsbf2n196"]
+[gd_scene load_steps=3 format=3 uid="uid://cyh3tsbf2n196"]
 
-; Phase 2 placeholder — customer sprite, order bubble, seat assignment
+[ext_resource type="Script" path="res://scripts/Customer.gd" id="1_script"]
 
-[node name="Customer" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(48.0, 48.0)
+
+; Root: CharacterBody2D — position is set by CustomerManager on spawn
+[node name="Customer" type="CharacterBody2D"]
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.0, 0.0)
+shape = SubResource("RectangleShape2D_1")
+
+; Visual placeholder — #C8A882, centered on origin
+[node name="Body" type="ColorRect" parent="."]
+position = Vector2(-24.0, -24.0)
+size = Vector2(48.0, 48.0)
+color = Color(0.784, 0.659, 0.510, 1)
+
+; Patience bar — thin red strip, shrinks left→right as time drains
+; Sits above the OrderBubble. Controlled entirely by Customer.gd _process.
+[node name="PatienceBar" type="ColorRect" parent="."]
+position = Vector2(-24.0, -66.0)
+size = Vector2(48.0, 6.0)
+color = Color(0.855, 0.180, 0.180, 1)
+visible = false
+
+; Order bubble — drink name label, shown once customer is seated
+[node name="OrderBubble" type="Label" parent="."]
+position = Vector2(-48.0, -60.0)
+size = Vector2(96.0, 28.0)
+text = ""
+horizontal_alignment = 1
+visible = false
+
+[node name="Patience" type="Timer" parent="."]
+wait_time = 30.0
+one_shot = true
+
+; AnimationPlayer — idle/walking/leaving animations, populated in Phase 3
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

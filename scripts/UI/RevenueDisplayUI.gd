@@ -7,9 +7,6 @@ func _ready() -> void:
 	GameManager.revenue_changed.connect(_on_revenue_changed)
 	_update_display(GameManager.total_revenue, GameManager.REVENUE_TARGET)
 
-	# Phase 1 test: verify display updates when add_revenue() is called
-	GameManager.add_revenue(500.0)
-
 func _on_revenue_changed(new_revenue: float, target: float) -> void:
 	_update_display(new_revenue, target)
 

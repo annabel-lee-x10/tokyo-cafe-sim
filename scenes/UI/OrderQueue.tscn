@@ -1,5 +1,8 @@
-[gd_scene load_steps=1 format=3 uid="uid://dxk5mbqwr3j72"]
+[gd_scene load_steps=2 format=3 uid="uid://dxk5mbqwr3j72"]
 
-; Phase 2 placeholder — live order queue panel
+[ext_resource type="Script" path="res://scripts/UI/OrderQueueUI.gd" id="1_script"]
 
-[node name="OrderQueue" type="Control"]
+; HBoxContainer — buttons are added dynamically by OrderQueueUI.gd
+[node name="OrderQueue" type="HBoxContainer"]
+script = ExtResource("1_script")
+custom_minimum_size = Vector2(0.0, 60.0)
